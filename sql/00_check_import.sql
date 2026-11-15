@@ -1,3 +1,6 @@
+-- =====================================================================
+-- 00 - проверка загрузки данных: число строк по каждой таблице
+-- =====================================================================
 -- 1. Загрузка: 8 таблиц через импорт DBeaver, reviews через psql (\copy) — т.к. при импорте возникла ошибка, в которой склеивались отзывы
 -- 2. CREATE TABLE reviews (...)
 -- 3. ALTER TABLE ... (исправление типов дат)
@@ -20,4 +23,4 @@ select 'products' as table_name, count(*) as row_count from products pr
 union all
 select 'reviews' as table_name, count(*) as row_count from reviews r
 union all
-select 'sellers' as table_name, count(*) as row_count from sellers s
+select 'sellers' as table_name, count(*) as row_count from sellers s;

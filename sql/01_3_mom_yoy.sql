@@ -1,5 +1,12 @@
--- Задача 1. Подзадача 1.3 - динамика: MoM и YoY по месяцам (в % и в абсолютных значениях)
+-- =====================================================================
+-- Задача 1 · Подзадача 1.3 - динамика: MoM и YoY по месяцам (в % и в абсолютных значениях)
+-- Вопрос продакта: растём или нет? Какие месяцы выбиваются?
+-- Решение: YoY через LAG(…, 12) корректен, потому что в v_delivered_monthly нет пропущенных месяцев
+--   (календарь без пропусков). Ряд обрезан по 2017-01…2018-08.
+-- Находки: ноябрь 2017 - пик (Чёрная пятница, см. 01_5); в 2018 рост от месяца к месяцу
+--   почти остановился - заказы держатся на уровне ~6–7 тыс. в месяц.
 -- Зависит от: 01_0_views.sql
+-- =====================================================================
 
 WITH
 mom_1 AS (
@@ -25,7 +32,6 @@ SELECT
 		LAG(avg_month_payment, 12) OVER (
 	ORDER BY MONTH) AS prev_year_avg_month_payment
 FROM v_delivered_monthly
-ORDER BY MONTH DESC
 ),
 mom_yoy_prcnt AS (
 -- 3. Сравнение MOM - месяц к месяцу, и YOY - год к году - в процентах
@@ -44,9 +50,7 @@ SELECT
 		round( ((avg_month_payment - prev_month_avg_month_payment) / NULLIF(prev_month_avg_month_payment, 0)) * 100, 1 ) AS mom_avg_month_payment_prcnt,
 		round( ((avg_month_payment - prev_year_avg_month_payment) / NULLIF(prev_year_avg_month_payment, 0)) * 100, 1 ) AS yoy_avg_month_payment_prcnt
 FROM mom_1
--- TODO (ревью): справа в ряду будут сентябрь-октябрь 2018 с 0 доставленных и YoY -100%: реши, показывать ли их
-WHERE MONTH >= '2017-01-01'
-ORDER BY MONTH DESC
+WHERE MONTH >= '2017-01-01' AND MONTH <= '2018-08-01' -- Берем этот период, т.к. 2016 - единичные заказы, после 08.2018 нет доставленных заказов (данные заканчиваются 17.10.2018)
 ),
 mom_yoy_dif AS (
 -- 3. Сравнение MOM - месяц к месяцу, и YOY - год к году - в абсолютных значениях. январь-август 2018 vs 2017 год
@@ -67,7 +71,6 @@ SELECT
 FROM
 	mom_1
 WHERE (MONTH >= '2018-01-01' AND MONTH <= '2018-08-31')
-ORDER BY MONTH DESC
 )
 
 SELECT * FROM mom_yoy_prcnt ORDER BY MONTH;
