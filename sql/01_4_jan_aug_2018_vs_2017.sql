@@ -31,19 +31,20 @@ SELECT
 	ja.gmv - LAG(ja.gmv, 1) OVER (ORDER BY year) AS gmv_dif,
 	round(
 		(ja.gmv - LAG(ja.gmv, 1) OVER (ORDER BY year)) / LAG(ja.gmv, 1) OVER (ORDER BY year) :: NUMERIC * 100 
-	, 2)
+		, 2)
 	AS gmv_prcnt ,
 	
 	ja.orders_count - LAG(ja.orders_count,1) OVER (ORDER BY year) AS orders_count_dif,
 	round(
-	(ja.orders_count - LAG(ja.orders_count,1) OVER (ORDER BY year)) / LAG(ja.orders_count,1) OVER (ORDER BY year) :: NUMERIC *100 
-	,2)
+		(ja.orders_count - LAG(ja.orders_count,1) OVER (ORDER BY year)) / LAG(ja.orders_count,1) OVER (ORDER BY year) :: NUMERIC *100 
+		,2)
 	AS orders_count_prcnt,
 	
 	round(ja.avg_payment - LAG(ja.avg_payment, 1) OVER (ORDER BY year),2) AS avg_payment_dif,
 	round(
-	(ja.avg_payment - LAG(ja.avg_payment, 1) OVER (ORDER BY year)) / LAG(ja.avg_payment, 1) OVER (ORDER BY year) :: NUMERIC * 100
-	, 2) AS avg_payment_prcnt
+		(ja.avg_payment - LAG(ja.avg_payment, 1) OVER (ORDER BY year)) / LAG(ja.avg_payment, 1) OVER (ORDER BY year) :: NUMERIC * 100
+		, 2) 
+	AS avg_payment_prcnt
 FROM jan_aug_2017_vs_2018_abs ja
 )
 
