@@ -60,4 +60,3 @@ state_order AS (
 SELECT * FROM state_order ORDER BY extra_delays DESC
 
 
-
